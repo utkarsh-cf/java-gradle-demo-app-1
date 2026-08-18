@@ -1,0 +1,30 @@
+pipeline {
+    agent {
+        docker {
+            image 'eclipse-temurin:17-jdk-jammy'
+            args '-v $HOME/.gradle:/root/.gradle'
+        }
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh './gradlew clean assemble --no-daemon'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh './gradlew test --no-daemon'
+            }
+            post {
+                always {
+                    junit 'build/test-results/test/*.xml'
+                }
+            }
+        }
+        stage('Deliver') {
+            steps {
+                sh './jenkins/scripts/deliver.sh'
+            }
+        }
+    }
+}
