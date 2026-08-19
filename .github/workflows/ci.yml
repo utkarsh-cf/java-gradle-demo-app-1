@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - sarayu-gh
   pull_request:
 
 jobs:
